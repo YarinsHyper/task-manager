@@ -62,13 +62,3 @@ The UI does not need to be beautiful, but it should be clear and usable.
 The server includes a starter SQLite setup and a `tasks` table model. **You have full control over the API** — design your own endpoints, request/response shapes, and validation rules however you think is best.
 
 You are also free to **change the database schema and task model** if your design calls for it. The starter table is a suggestion, not a requirement.
-
-## What We Look For
-
-- Clear, simple ,readable code
-- Reasonable API design
-- Good validation and error handling
-- Thoughtful React state management
-- A usable UI
-- Practical tradeoffs and explanations
-
