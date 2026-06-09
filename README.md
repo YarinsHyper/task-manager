@@ -2,7 +2,7 @@
 
 This is a starter project for a small full-stack home assignment.
 
-Your goal is to build a task prioritizer where a user can create, view, update, delete, filter, and sort tasks.
+Your goal is to build a task manager that displays tasks from the database in a sortable table.
 
 You may use Google, documentation, ChatGPT, or any other tools. We care less about memorized syntax and more about how you think, structure your code, and explain your decisions.
 
@@ -10,7 +10,7 @@ You may use Google, documentation, ChatGPT, or any other tools. We care less abo
 
 - Frontend: React with Vite and TypeScript
 - Backend: Node.js with Express and TypeScript
-- Data: In-memory only, no database required
+- Data: SQLite (local file at `server/data/tasks.db`)
 
 ## Project Structure
 
@@ -19,42 +19,25 @@ client/
   React + Vite frontend
 
 server/
-  Express API backend
+  Express API backend with SQLite
 ```
 
 The frontend and backend are separate apps with separate dependencies and commands.
 
 ## Getting Started
 
-Install and run the backend:
+From the project root, install dependencies and run both apps:
 
 ```bash
-cd server
-npm install
+npm run install:all
 npm run dev
 ```
 
-The backend runs on:
+The frontend proxies API requests to `/api` on the backend.
 
-```text
-http://localhost:3000
-```
+## Requirements
 
-Install and run the frontend in a second terminal:
-
-```bash
-cd client
-npm install
-npm run dev
-```
-
-The frontend runs on Vite's local dev server. API requests to `/api` are proxied to the backend.
-
-## Product Requirements
-
-Build a simple task prioritizer.
-
-Each task should have:
+Tasks are based on the starter `tasks` table:
 
 - `id`
 - `title`
@@ -62,83 +45,27 @@ Each task should have:
 - `status`: `todo` or `done`
 - `createdAt`
 
-## Backend Requirements
+Build a React UI that:
 
-Create a small REST API.
-
-### `GET /api/tasks`
-
-Returns all tasks.
-
-Support optional query params:
-
-- `status=todo|done`
-- `priority=low|medium|high`
-- `sort=priority|createdAt`
-
-Example:
-
-```http
-GET /api/tasks?status=todo&sort=priority
-```
-
-### `POST /api/tasks`
-
-Creates a new task.
-
-Request body:
-
-```json
-{
-  "title": "Book doctor appointment",
-  "priority": "high"
-}
-```
-
-Validation rules:
-
-- `title` is required
-- `title` cannot be empty
-- `priority` must be one of `low`, `medium`, `high`
-- Default `status` should be `todo`
-
-### `PATCH /api/tasks/:id`
-
-Updates a task.
-
-Should support changing:
-
-- `title`
-- `priority`
-- `status`
-
-### `DELETE /api/tasks/:id`
-
-Deletes a task.
-
-## Frontend Requirements
-
-Create a React UI that allows the user to:
-
-- See all tasks
-- Add a new task
-- Mark a task as done or todo
-- Delete a task
-- Filter by status
-- Filter by priority
-- Sort by priority or creation time
+- Shows tasks in a **table**
+- Lets the user **sort by any column**
+- Lets the user **add a new task**
+- Lets the user **mark a task as done or todo**
+- Lets the user **filter by status**
+- Lets the user **filter by priority**
+- Lets the user **delete a row**
 
 The UI does not need to be beautiful, but it should be clear and usable.
 
-## Important Logic Requirement
+## Backend
 
-Priority sorting should be logical, not alphabetical.
+The server includes a starter SQLite setup and a `tasks` table model. **You have full control over the API** — design your own endpoints, request/response shapes, and validation rules however you think is best.
 
-For example, `high` should sort above `medium`, and `medium` should sort above `low`.
+You are also free to **change the database schema and task model** if your design calls for it. The starter table is a suggestion, not a requirement.
 
 ## What We Look For
 
-- Clear, readable code
+- Clear, simple ,readable code
 - Reasonable API design
 - Good validation and error handling
 - Thoughtful React state management

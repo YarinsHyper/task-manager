@@ -1,5 +1,7 @@
 import cors from "cors";
 import express from "express";
+import "./db/index.js";
+import { TaskModel } from "./models/task.js";
 
 const app = express();
 const port = process.env.PORT ?? 3000;
@@ -12,11 +14,7 @@ app.get("/health", (_req, res) => {
 });
 
 app.get("/api/tasks", (_req, res) => {
-  res.json({
-    message:
-      "Task API placeholder. Implement task listing, filtering, and sorting here.",
-    tasks: []
-  });
+  res.json({ tasks: TaskModel.findAll() });
 });
 
 app.listen(port, () => {
