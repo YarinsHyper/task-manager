@@ -24,3 +24,5 @@ dist
 .env
 .DS_Store
 npm-debug.log*
+
+task-assignment.zip

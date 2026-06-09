@@ -62,3 +62,15 @@ The UI does not need to be beautiful, but it should be clear and usable.
 The server includes a starter SQLite setup and a `tasks` table model. **You have full control over the API** — design your own endpoints, request/response shapes, and validation rules however you think is best.
 
 You are also free to **change the database schema and task model** if your design calls for it. The starter table is a suggestion, not a requirement.
+
+## Submitting Your Assignment
+
+When you are done, create a zip file of your project from the root directory:
+
+```bash
+npm run zip
+```
+
+This creates `task-assignment.zip` in the project root.
+
+Email the zip file to us as your submission.
