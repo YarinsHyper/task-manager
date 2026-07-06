@@ -45,11 +45,15 @@ export default function MainPage() {
         <FilterBar
           isComplete={filters.isComplete}
           priority={filters.priority}
+          title={filters.title}
           onIsCompleteChange={(isComplete) =>
             setFilters((prev) => ({ ...prev, isComplete }))
           }
           onPriorityChange={(priority) =>
             setFilters((prev) => ({ ...prev, priority }))
+          }
+          onTitleChange={(title) =>
+            setFilters((prev) => ({ ...prev, title }))
           }
         />
 

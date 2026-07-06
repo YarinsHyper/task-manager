@@ -20,6 +20,7 @@ import { taskCacheReducer } from "./taskCacheReducer";
 interface Filters {
   isComplete?: boolean;
   priority?: TaskPriority;
+  title?: string;
 }
 
 interface Sort {
@@ -118,6 +119,11 @@ export function useTasks() {
           task.isComplete === filters.isComplete,
       )
       .filter((task) => !filters.priority || task.priority === filters.priority)
+      .filter(
+        (task) =>
+          !filters.title ||
+          task.title.toLowerCase().includes(filters.title.toLowerCase()),
+      )
       .sort((a, b) => compareTasks(a, b, sort));
   }, [cache, filters, sort]);
 

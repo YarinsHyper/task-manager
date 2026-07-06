@@ -3,8 +3,10 @@ import type { TaskPriority } from "../../types/task";
 interface Props {
   isComplete?: boolean;
   priority?: TaskPriority;
+  title?: string;
   onIsCompleteChange: (isComplete?: boolean) => void;
   onPriorityChange: (priority?: TaskPriority) => void;
+  onTitleChange: (title?: string) => void;
 }
 
 // <select> values are always strings, so map back to boolean | undefined.
@@ -14,9 +16,25 @@ function parseIsComplete(value: string): boolean | undefined {
   return undefined;
 }
 
-export default function FilterBar({ isComplete, priority, onIsCompleteChange, onPriorityChange }: Props) {
+export default function FilterBar({
+  isComplete,
+  priority,
+  title,
+  onIsCompleteChange,
+  onPriorityChange,
+  onTitleChange,
+}: Props) {
   return (
     <div className="filter-bar">
+      <label>
+        Name
+        <input
+          type="text"
+          value={title ?? ""}
+          placeholder="Search by name"
+          onChange={(event) => onTitleChange(event.target.value || undefined)}
+        />
+      </label>
       <label>
         Status
         <select
