@@ -18,12 +18,14 @@ export const db = new Database(dbPath);
 db.pragma("journal_mode = WAL");
 db.pragma("foreign_keys = ON");
 
+// The one table this app has. Runs on every startup but is a no-op once
+// the table already exists.
 db.exec(`
   CREATE TABLE IF NOT EXISTS tasks (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     title TEXT NOT NULL,
     priority TEXT NOT NULL CHECK (priority IN ('low', 'medium', 'high')),
-    status TEXT NOT NULL DEFAULT 'todo' CHECK (status IN ('todo', 'done')),
+    is_complete BOOLEAN NOT NULL DEFAULT FALSE CHECK (is_complete IN (FALSE, TRUE)),
     created_at TEXT NOT NULL DEFAULT (datetime('now'))
   )
 `);

@@ -1,0 +1,266 @@
+.app {
+  display: grid;
+  min-height: 100vh;
+  place-items: start center;
+  padding: 2rem;
+}
+
+.card {
+  width: min(100%, 960px);
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  background: #ffffff;
+  padding: 2rem;
+  box-shadow: 0 10px 30px rgb(15 23 42 / 8%);
+}
+
+.eyebrow {
+  margin: 0 0 0.5rem;
+  color: #4f46e5;
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 0 0 1.5rem;
+  font-size: clamp(2rem, 5vw, 3rem);
+  line-height: 1;
+}
+
+p {
+  margin: 0;
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+code {
+  border-radius: 4px;
+  background: #f3f4f6;
+  color: #111827;
+  padding: 0.1rem 0.25rem;
+}
+
+.add-task-form {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.add-task-form input {
+  flex: 1;
+}
+
+.filter-bar {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.filter-bar label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.8rem;
+  color: #4b5563;
+  font-weight: 600;
+}
+
+input,
+select,
+button {
+  font: inherit;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  padding: 0.5rem 0.75rem;
+}
+
+button {
+  background: #4f46e5;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+button:hover {
+  background: #4338ca;
+}
+
+button:disabled {
+  background: #a5a6f6;
+  cursor: not-allowed;
+}
+
+button.danger {
+  background: #dc2626;
+  padding: 0.35rem 0.6rem;
+  font-size: 0.8rem;
+}
+
+button.danger:hover {
+  background: #b91c1c;
+}
+
+.sort-button {
+  background: none;
+  border: none;
+  color: #111827;
+  font-weight: 700;
+  padding: 0;
+  cursor: pointer;
+}
+
+.sort-button:hover {
+  color: #4f46e5;
+  background: none;
+}
+
+.task-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.5rem;
+}
+
+.task-table th,
+.task-table td {
+  text-align: left;
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.status-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.badge {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 0.15rem 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.badge-low {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.badge-medium {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.badge-high {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.empty-row {
+  text-align: center;
+  color: #9ca3af;
+  padding: 1.5rem;
+}
+
+.snackbar {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: white;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgb(15 23 42 / 20%);
+  max-width: min(90vw, 360px);
+  z-index: 10000;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.snackbar-open {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.snackbar-closed {
+  transform: translateX(120%);
+  opacity: 0;
+}
+
+.snackbar-error {
+  background: #dc2626;
+}
+
+.snackbar-success {
+  background: #16a34a;
+}
+
+.snackbar-message {
+  animation: snackbar-message-fade 0.25s ease;
+}
+
+@keyframes snackbar-message-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.snackbar-dismiss {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.1rem;
+  line-height: 1;
+  padding: 0;
+  cursor: pointer;
+}
+
+.snackbar-dismiss:hover {
+  background: none;
+  opacity: 0.8;
+}
+
+.loading {
+  margin-top: 0.75rem;
+  color: #6b7280;
+}
+
+.confetti-layer {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.confetti-piece {
+  position: absolute;
+  top: -12px;
+  width: 8px;
+  height: 14px;
+  opacity: 0.9;
+  animation-name: confetti-fall;
+  animation-timing-function: ease-in;
+  animation-fill-mode: forwards;
+}
+
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
