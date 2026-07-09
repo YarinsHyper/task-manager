@@ -31,7 +31,7 @@ export default function FilterBar({
         <input
           type="text"
           value={title ?? ""}
-          placeholder="Search by name"
+          placeholder="Search task"
           onChange={(event) => onTitleChange(event.target.value || undefined)}
         />
       </label>

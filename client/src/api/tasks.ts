@@ -27,19 +27,19 @@ export const tasksApi = {
     return task;
   },
 
-  async update(id: number, input: UpdateTaskInput): Promise<Task> {
+  async update(id: number, input: UpdateTaskInput): Promise<{ task: Task; affected: Task[] }> {
     const res = await fetch(`${API_BASE_URL}/${id}`, {
       method: "PATCH",
       headers: jsonHeaders,
       body: JSON.stringify(input),
     });
-    const { task } = await handleResponse<TaskResponse>(res);
-    return task;
+    const { task, affected } = await handleResponse<TaskResponse>(res);
+    return { task, affected: affected ?? [task] };
   },
 
-  async delete(id: number): Promise<number> {
+  async delete(id: number): Promise<number[]> {
     const res = await fetch(`${API_BASE_URL}/${id}`, { method: "DELETE" });
-    const { id: deletedId } = await handleResponse<DeleteResponse>(res);
-    return deletedId;
+    const { id: deletedId, deletedIds } = await handleResponse<DeleteResponse>(res);
+    return deletedIds ?? [deletedId];
   },
 };

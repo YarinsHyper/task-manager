@@ -52,6 +52,10 @@ code {
   flex: 1;
 }
 
+.add-task-form select {
+  max-width: 220px;
+}
+
 .filter-bar {
   display: flex;
   gap: 1.5rem;
@@ -110,6 +114,7 @@ button.danger:hover {
   font-weight: 700;
   padding: 0;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .sort-button:hover {
@@ -128,6 +133,61 @@ button.danger:hover {
   text-align: left;
   padding: 0.6rem 0.75rem;
   border-bottom: 1px solid #e5e7eb;
+}
+
+.task-table th:first-child,
+.task-table td:first-child {
+  width: 2rem;
+  padding-right: 0;
+}
+
+.expand-toggle {
+  background: none;
+  border: none;
+  color: #4b5563;
+  font-size: 0.7rem;
+  line-height: 1;
+  padding: 0.25rem;
+  cursor: pointer;
+}
+
+.expand-toggle:hover {
+  background: none;
+  color: #4f46e5;
+}
+
+.subtask-row td {
+  padding: 0 0 0.75rem 2.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.subtask-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.subtask-table th,
+.subtask-table td {
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 0.9rem;
+}
+
+.subtask-table th {
+  color: #6b7280;
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.subtask-table tr:last-child td {
+  border-bottom: none;
 }
 
 .status-toggle {

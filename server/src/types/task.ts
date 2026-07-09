@@ -6,6 +6,7 @@ export interface Task {
   title: string;
   priority: TaskPriority;
   isComplete: boolean;
+  parentId: number | null;
   createdAt: string;
 }
 
@@ -13,6 +14,8 @@ export interface CreateTaskInput {
   title: string;
   priority: TaskPriority;
   isComplete?: boolean;
+  // Set to make this task a subtask of an existing top-level task.
+  parentId?: number | null;
 }
 
 export interface UpdateTaskInput {
@@ -28,5 +31,6 @@ export interface TaskRow {
   title: string;
   priority: Task["priority"];
   is_complete: number;
+  parent_id: number | null;
   created_at: string;
 }
