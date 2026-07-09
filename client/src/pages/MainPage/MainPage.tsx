@@ -27,9 +27,23 @@ export default function MainPage() {
   } = useTasks();
   const { pieces, fire } = useConfetti();
 
+  // A father finishing counts as finished whether it was checked directly or
+  // it just became complete because its last open subtask was -- the latter
+  // mirrors the server's own "all subtasks done" rule so it fires in step
+  // with the auto-complete instead of waiting on the response.
   const handleToggleComplete = (task: Task) => {
     if (!task.isComplete) {
-      fire();
+      if (task.parentId === null) {
+        fire();
+      } else {
+        const siblings = subtasksByParent.get(task.parentId) ?? [];
+        const isLastOpenSubtask = siblings.every(
+          (sibling) => sibling.id === task.id || sibling.isComplete,
+        );
+        if (isLastOpenSubtask) {
+          fire();
+        }
+      }
     }
     toggleComplete(task);
   };
