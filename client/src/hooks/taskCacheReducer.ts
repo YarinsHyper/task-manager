@@ -6,8 +6,8 @@ import type { Task } from "../types/task";
 export type TaskCacheAction =
   | { type: "loaded"; tasks: Task[] }
   | { type: "added"; task: Task }
-  | { type: "updated"; task: Task }
-  | { type: "removed"; id: number };
+  | { type: "updated"; tasks: Task[] }
+  | { type: "removed"; ids: number[] };
 
 export function taskCacheReducer(state: Task[], action: TaskCacheAction): Task[] {
   switch (action.type) {
@@ -15,9 +15,11 @@ export function taskCacheReducer(state: Task[], action: TaskCacheAction): Task[]
       return action.tasks;
     case "added":
       return [...state, action.task];
-    case "updated":
-      return state.map((task) => (task.id === action.task.id ? action.task : task));
+    case "updated": {
+      const byId = new Map(action.tasks.map((task) => [task.id, task]));
+      return state.map((task) => byId.get(task.id) ?? task);
+    }
     case "removed":
-      return state.filter((task) => task.id !== action.id);
+      return state.filter((task) => !action.ids.includes(task.id));
   }
 }

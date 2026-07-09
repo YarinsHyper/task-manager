@@ -12,6 +12,8 @@ import type { Task } from "@/types/task";
 export default function MainPage() {
   const {
     tasks,
+    topLevelTasks,
+    subtasksByParent,
     loading,
     notice,
     clearNotice,
@@ -40,7 +42,7 @@ export default function MainPage() {
         <p className="eyebrow">Home Assignment - @Yarin</p>
         <h1>Task Manager</h1>
 
-        <AddTaskForm onAdd={addTask} />
+        <AddTaskForm onAdd={addTask} parentOptions={topLevelTasks} />
 
         <FilterBar
           isComplete={filters.isComplete}
@@ -59,6 +61,7 @@ export default function MainPage() {
 
         <TaskTable
           tasks={tasks}
+          subtasksByParent={subtasksByParent}
           sortBy={sort.sortBy}
           order={sort.order}
           onSort={toggleSort}

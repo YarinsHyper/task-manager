@@ -8,53 +8,14 @@ import {
 } from "react";
 import { tasksApi } from "../api/tasks";
 import type { Notice } from "../types/notice";
-import type {
-  CreateTaskInput,
-  SortOrder,
-  Task,
-  TaskPriority,
-  TaskSortColumn,
-} from "../types/task";
+import type { CreateTaskInput, Task, TaskPriority, TaskSortColumn } from "../types/task";
+import { compareTasks, type TaskSort } from "../utils/sortTasks";
 import { taskCacheReducer } from "./taskCacheReducer";
 
 interface Filters {
   isComplete?: boolean;
   priority?: TaskPriority;
   title?: string;
-}
-
-interface Sort {
-  sortBy: TaskSortColumn;
-  order: SortOrder;
-}
-
-const PRIORITY_RANK: Record<TaskPriority, number> = {
-  low: 0,
-  medium: 1,
-  high: 2,
-};
-
-// low/medium/high isn't alphabetical order, so rank them explicitly --
-// mirrors the CASE expression the server used before sorting moved here.
-// isComplete/title also get their own branch: TS won't allow `<`/`>` on
-// booleans directly, and title needs locale-aware comparison, not `<`.
-function compareTasks(a: Task, b: Task, sort: Sort): number {
-  let result: number;
-  if (sort.sortBy === "priority") {
-    result = PRIORITY_RANK[a.priority] - PRIORITY_RANK[b.priority];
-  } else if (sort.sortBy === "title") {
-    result = a.title.localeCompare(b.title, undefined, { sensitivity: "base" });
-  } else if (sort.sortBy === "isComplete") {
-    result = Number(a.isComplete) - Number(b.isComplete);
-  } else {
-    result =
-      a[sort.sortBy] < b[sort.sortBy]
-        ? -1
-        : a[sort.sortBy] > b[sort.sortBy]
-          ? 1
-          : 0;
-  }
-  return sort.order === "asc" ? result : -result;
 }
 
 // Fetches the full task list exactly once (see the effect below) and keeps
@@ -66,7 +27,7 @@ function compareTasks(a: Task, b: Task, sort: Sort): number {
 export function useTasks() {
   const [cache, dispatch] = useReducer(taskCacheReducer, []);
   const [filters, setFilters] = useState<Filters>({});
-  const [sort, setSort] = useState<Sort>({
+  const [sort, setSort] = useState<TaskSort>({
     sortBy: "createdAt",
     order: "desc",
   });
@@ -111,8 +72,26 @@ export function useTasks() {
 
   const clearNotice = useCallback(() => setNotice(null), []);
 
+  const subtasksByParent = useMemo(() => {
+    const map = new Map<number, Task[]>();
+    for (const task of cache) {
+      if (task.parentId === null) continue;
+      const siblings = map.get(task.parentId) ?? [];
+      siblings.push(task);
+      map.set(task.parentId, siblings);
+    }
+    for (const siblings of map.values()) {
+      siblings.sort((a, b) => a.createdAt.localeCompare(b.createdAt));
+    }
+    return map;
+  }, [cache]);
+
+  // Filtering/sorting apply to top-level (father) tasks only, matched by
+  // their own title -- subtasks stay grouped under their parent and are
+  // shown in full when a row expands, unaffected by these filters.
   const tasks = useMemo(() => {
     return cache
+      .filter((task) => task.parentId === null)
       .filter(
         (task) =>
           filters.isComplete === undefined ||
@@ -134,7 +113,12 @@ export function useTasks() {
     try {
       const task = await tasksApi.create(input);
       dispatch({ type: "added", task });
-      setNotice({ type: "success", message: `Task "${task.title}" added.` });
+      setNotice({
+        type: "success",
+        message: task.parentId
+          ? `Subtask "${task.title}" added.`
+          : `Task "${task.title}" added.`,
+      });
     } catch (err) {
       setNotice({
         type: "error",
@@ -145,10 +129,10 @@ export function useTasks() {
 
   const toggleComplete = useCallback(async (task: Task) => {
     try {
-      const updated = await tasksApi.update(task.id, {
+      const { affected } = await tasksApi.update(task.id, {
         isComplete: !task.isComplete,
       });
-      dispatch({ type: "updated", task: updated });
+      dispatch({ type: "updated", tasks: affected });
     } catch (err) {
       setNotice({
         type: "error",
@@ -159,8 +143,8 @@ export function useTasks() {
 
   const removeTask = useCallback(async (id: number) => {
     try {
-      const deletedId = await tasksApi.delete(id);
-      dispatch({ type: "removed", id: deletedId });
+      const deletedIds = await tasksApi.delete(id);
+      dispatch({ type: "removed", ids: deletedIds });
     } catch (err) {
       setNotice({
         type: "error",
@@ -177,8 +161,17 @@ export function useTasks() {
     );
   }, []);
 
+  // Unfiltered father tasks, for pickers (e.g. "add as subtask of...") that
+  // shouldn't be limited by whatever filters currently narrow the table.
+  const topLevelTasks = useMemo(
+    () => cache.filter((task) => task.parentId === null),
+    [cache],
+  );
+
   return {
     tasks,
+    topLevelTasks,
+    subtasksByParent,
     loading,
     notice,
     clearNotice,

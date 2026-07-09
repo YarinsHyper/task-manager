@@ -7,6 +7,16 @@ function isPriority(value: unknown): value is TaskPriority {
   return typeof value === "string" && (PRIORITIES as string[]).includes(value);
 }
 
+function parseParentId(value: unknown): number | null | undefined {
+  if (value === undefined || value === null) {
+    return value;
+  }
+  if (typeof value !== "number" || !Number.isInteger(value) || value <= 0) {
+    throw new AppError(400, "parentId must be a positive integer or null");
+  }
+  return value;
+}
+
 // req.params can technically be string[] for repeated route segments.
 export function parseId(rawId: string | string[]): number {
   if (typeof rawId !== "string") {
@@ -23,7 +33,7 @@ export function parseCreate(body: unknown): CreateTaskInput {
   if (typeof body !== "object" || body === null) {
     throw new AppError(400, "Request body must be a JSON object");
   }
-  const { title, priority, isComplete } = body as Record<string, unknown>;
+  const { title, priority, isComplete, parentId } = body as Record<string, unknown>;
 
   if (typeof title !== "string" || title.trim().length === 0) {
     throw new AppError(400, "title is required and must be a non-empty string");
@@ -35,7 +45,7 @@ export function parseCreate(body: unknown): CreateTaskInput {
     throw new AppError(400, "isComplete must be a boolean");
   }
 
-  return { title: title.trim(), priority, isComplete };
+  return { title: title.trim(), priority, isComplete, parentId: parseParentId(parentId) };
 }
 
 export function parseUpdate(body: unknown): UpdateTaskInput {
